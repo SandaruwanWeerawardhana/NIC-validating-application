@@ -1,15 +1,30 @@
 
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import NICValidator from './pages/NICValidator';
+import Reports from './pages/Reports';
+import { Layout } from './components/Layout';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 function App() {
- 
-
   return (
-    <>
-      <p >
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route element={<Layout />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/validate" element={<NICValidator />} />
+            <Route path="/reports" element={<Reports />} />
+          </Route>
+        </Route>
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
