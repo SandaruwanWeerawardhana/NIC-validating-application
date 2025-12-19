@@ -1,0 +1,55 @@
+import { useNicStore } from '../store/nicStore';
+import { Card } from '../components/Card';
+import { Users, User, UserCheck } from 'lucide-react';
+
+const Dashboard = () => {
+    const records = useNicStore((state) => state.records);
+
+    const total = records.length;
+    const male = records.filter(r => r.gender === 'Male').length;
+    const female = records.filter(r => r.gender === 'Female').length;
+
+    const stats = [
+        { label: 'Total Validations', value: total, icon: Users, color: 'text-blue-400', bg: 'bg-blue-500/10' },
+        { label: 'Male Users', value: male, icon: User, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
+        { label: 'Female Users', value: female, icon: UserCheck, color: 'text-purple-400', bg: 'bg-purple-500/10' },
+    ];
+
+    return (
+        <div className="space-y-8">
+            <header className="mb-8">
+                <h2 className="text-3xl font-bold text-white mb-2">Dashboard</h2>
+                <p className="text-slate-400">System overview and statistics</p>
+            </header>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {stats.map((stat, i) => {
+                    const Icon = stat.icon;
+                    return (
+                        <Card key={stat.label} className={`p-0 stagger-${i + 1} flex-1`}>
+                            <div className="flex items-center gap-5">
+                                <div className={`p-4 rounded-xl ${stat.bg} ring-1 ring-inset ring-white/5`}>
+                                    <Icon className={`w-8 h-8 ${stat.color}`} />
+                                </div>
+                                <div>
+                                    <p className="text-sm font-medium text-slate-400">{stat.label}</p>
+                                    <p className="text-4xl font-bold text-white mt-1 tracking-tight">{stat.value}</p>
+                                </div>
+                            </div>
+                        </Card>
+                    );
+                })}
+            </div>
+
+            <div className="mt-8">
+                <h3 className="text-xl font-semibold text-white mb-6">Recent Activity</h3>
+                <div className="glass-card p-12 text-center text-slate-500 border-dashed border-2 border-white/5">
+                    <p className="text-lg">System operational</p>
+                    <p className="text-sm mt-2 opacity-60">Real-time validation engine active</p>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Dashboard;

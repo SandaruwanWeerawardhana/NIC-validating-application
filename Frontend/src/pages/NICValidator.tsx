@@ -1,0 +1,212 @@
+import { useState } from "react";
+import { validateNic, type NICData } from "../utils/nicValidation";
+import { useNicStore } from "../store/nicStore";
+import { Card } from "../components/Card";
+import { Input } from "../components/Input";
+import { Button } from "../components/Button";
+import { Search, RotateCcw, CheckCircle } from "lucide-react";
+import { format } from "date-fns";
+
+const NICValidator = () => {
+  const [input, setInput] = useState("");
+  const [result, setResult] = useState<NICData | null>(null);
+  const addRecord = useNicStore((state) => state.addRecord);
+
+  const handleValidate = (e: React.FormEvent) => {
+    e.preventDefault();
+    const validationResult = validateNic(input);
+    setResult(validationResult);
+
+    if (validationResult.isValid) {
+      addRecord(validationResult);
+    }
+  };
+
+  const handleReset = () => {
+    setInput("");
+    setResult(null);
+  };
+
+  return (
+    <div className="max-w-5xl mx-auto space-y-8 animate-enter">
+      <header className="flex justify-between items-end">
+        <div>
+          <h2 className="text-3xl font-bold text-white mb-2">Check ID</h2>
+          <p className="text-slate-400">
+            Validate Sri Lankan Identity Cards instanty
+          </p>
+        </div>
+      </header>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Input Section */}
+        <Card title="Input Details" className="h-fit">
+          <form onSubmit={handleValidate} className="space-y-6">
+            <Input
+              label="NIC Number"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="e.g. 853400512V or 198534000512"
+              error={
+                result && !result.isValid && result.error
+                  ? result.error
+                  : undefined
+              }
+              className="text-lg tracking-wide"
+            />
+            <div className="flex gap-4 pt-2">
+              <Button type="submit" className="flex-1 gap-2 shadow-blue-500/20">
+                <Search size={18} /> Validate
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={handleReset}
+                className="gap-2"
+              >
+                <RotateCcw size={18} /> Reset
+              </Button>
+            </div>
+          </form>
+        </Card>
+
+        {/* Result Section */}
+        <div className="space-y-6">
+          {result && result.isValid ? (
+            <Card className="bg-emerald-900/10 border-emerald-500/20 relative overflow-hidden stagger-1">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl rounded-full"></div>
+
+              <div className="flex items-center gap-4 mb-8 text-emerald-400 border-b border-emerald-500/10 pb-4">
+                <div className="p-2 bg-emerald-500/10 rounded-lg">
+                  <CheckCircle className="text-emerald-400" size={24} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-white">
+                    Valid NIC Number
+                  </h3>
+                  <p className="text-xs text-emerald-400/70">
+                    Verified by algorithm
+                  </p>
+                </div>
+              </div>
+
+              <dl className="space-y-5 relative z-10">
+                <div className="grid grid-cols-2 gap-4">
+                  <dt className="text-sm font-medium text-slate-400">
+                    NIC Format
+                  </dt>
+                  <dd className="text-sm font-bold text-white capitalize">
+                    {result.type} Format
+                  </dd>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <dt className="text-sm font-medium text-slate-400">
+                    Date of Birth
+                  </dt>
+                  <dd className="text-sm font-bold text-white">
+                    {result.birthDate
+                      ? format(result.birthDate, "MMMM do, yyyy")
+                      : "-"}
+                  </dd>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <dt className="text-sm font-medium text-slate-400">Gender</dt>
+                  <dd className="text-sm font-bold text-white flex items-center gap-2">
+                    <span
+                      className={`w-2 h-2 rounded-full ${
+                        result.gender === "Male" ? "bg-blue-400" : "bg-pink-400"
+                      }`}
+                    ></span>
+                    {result.gender}
+                  </dd>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <dt className="text-sm font-medium text-slate-400">Age</dt>
+                  <dd className="text-sm font-bold text-white">
+                    {result.age} Years Old
+                  </dd>
+                </div>
+              </dl>
+            </Card>
+          ) : (
+            <Card className="flex items-center justify-center min-h-[350px] border-dashed border-2 border-slate-700/50 bg-transparent opacity-70">
+              <div className="text-center text-slate-500">
+                <div className="mx-auto w-14 h-14 bg-slate-800 rounded-full flex items-center justify-center mb-4 ring-1 ring-white/5">
+                  <Search size={28} className="opacity-50" />
+                </div>
+                <p>Enter an NIC number to view details</p>
+              </div>
+            </Card>
+          )}
+        </div>
+      </div>
+
+      {/* Recent Validations Table - Glass Table */}
+      <Card title="Recent Validations" className="stagger-2">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-left">
+            <thead className="text-slate-400 font-medium border-b border-white/5">
+              <tr>
+                <th className="px-4 py-4">NIC Number</th>
+                <th className="px-4 py-4">Format</th>
+                <th className="px-4 py-4">Date of Birth</th>
+                <th className="px-4 py-4">Gender</th>
+                <th className="px-4 py-4">Status</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/5">
+              {useNicStore.getState().records.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="px-4 py-8 text-center text-slate-500"
+                  >
+                    No recent validations
+                  </td>
+                </tr>
+              ) : (
+                useNicStore
+                  .getState()
+                  .records.map((rec, idx) => (
+                    <tr
+                      key={idx}
+                      className="hover:bg-white/5 transition-colors"
+                    >
+                      <td className="px-4 py-3 font-medium text-white font-mono">
+                        {rec.originalNic}
+                      </td>
+                      <td className="px-4 py-3 capitalize text-slate-300">
+                        {rec.type}
+                      </td>
+                      <td className="px-4 py-3 text-slate-400">
+                        {rec.birthDate
+                          ? format(rec.birthDate, "yyyy-MM-dd")
+                          : "-"}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span
+                          className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+                            rec.gender === "Male"
+                              ? "bg-blue-500/20 text-blue-300"
+                              : "bg-pink-500/20 text-pink-300"
+                          }`}
+                        >
+                          {rec.gender}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-emerald-400 font-medium">
+                        Verified
+                      </td>
+                    </tr>
+                  ))
+                  .slice(0, 5)
+              )}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+export default NICValidator;
