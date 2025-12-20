@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
-import { LayoutDashboard, CreditCard, FileText, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, CreditCard, FileText, LogOut, Menu, X, PlusCircle } from 'lucide-react';
 import { Button } from './Button';
 
 export const Layout = () => {
@@ -21,6 +21,7 @@ export const Layout = () => {
         { path: '/', label: 'Dashboard', icon: LayoutDashboard },
         { path: '/validate', label: 'Validate NIC', icon: CreditCard },
         { path: '/reports', label: 'Reports', icon: FileText },
+        { path: '/add', label: 'Add Data', icon: PlusCircle }, 
     ];
 
     return (
@@ -46,8 +47,8 @@ export const Layout = () => {
                                 key={item.path}
                                 to={item.path}
                                 className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-300 group ${isActive
-                                        ? 'bg-blue-600/20 text-blue-400 shadow-lg shadow-blue-500/10 border border-blue-500/20'
-                                        : 'text-slate-400 hover:bg-white/5 hover:text-white hover:translate-x-1'
+                                    ? 'bg-blue-600/20 text-blue-400 shadow-lg shadow-blue-500/10 border border-blue-500/20'
+                                    : 'text-slate-400 hover:bg-white/5 hover:text-white hover:translate-x-1'
                                     }`}
                             >
                                 <Icon size={22} className={`transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
@@ -90,8 +91,8 @@ export const Layout = () => {
                                         to={item.path}
                                         onClick={toggleMobileMenu}
                                         className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all ${isActive
-                                                ? 'bg-blue-600/20 text-blue-400 border border-blue-500/20'
-                                                : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                                            ? 'bg-blue-600/20 text-blue-400 border border-blue-500/20'
+                                            : 'text-slate-400 hover:bg-white/5 hover:text-white'
                                             }`}
                                     >
                                         <Icon size={22} />
