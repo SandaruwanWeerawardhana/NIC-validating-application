@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { Input } from '../components/Input';
 import { Button } from '../components/Button';
@@ -68,8 +68,15 @@ const Login = () => {
                             Sign In
                         </Button>
                     </form>
-                    <div className="mt-8 text-center text-xs text-slate-500">
-                        <p>Protected System • Authorized Personnel This Only</p>
+
+                    <div className="mt-8 text-center space-y-4">
+                        <p className="text-slate-400 text-sm">
+                            Don't have an account?{' '}
+                            <Link to="/register" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
+                                Create Account
+                            </Link>
+                        </p>
+                        <p className="text-xs text-slate-500">Protected System • Authorized Personnel This Only</p>
                     </div>
                 </div>
             </div>
