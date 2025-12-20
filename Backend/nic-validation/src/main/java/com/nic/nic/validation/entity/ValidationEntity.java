@@ -3,12 +3,10 @@ package com.nic.nic.validation.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 @Entity
 @RequiredArgsConstructor
-@NoArgsConstructor
 @Table(name = "nic_validation")
 public class ValidationEntity {
     @Id
