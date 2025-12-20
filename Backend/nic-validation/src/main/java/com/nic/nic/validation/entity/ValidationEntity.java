@@ -1,11 +1,18 @@
 package com.nic.nic.validation.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
+@Getter
+@Setter
 @RequiredArgsConstructor
 @Table(name = "nic_validation")
 public class ValidationEntity {
@@ -13,18 +20,17 @@ public class ValidationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "NIC is required")
-    @Pattern(
-            regexp = "^(\\d{9}[vVxX]|\\d{12})$",
-            message = "NIC must be 9 digits followed by V/X or 12 digits"
-    )
+    @Column(name = "nicNumber", nullable = false, unique = true, length = 12)
     private String nicNumber;
 
-    @NotBlank(message = "DOB is required")
+    @Column(name = "dob", nullable = false)
     private LocalDate dob;
 
-    @NotBlank(message = "Gender is required")
+    @Column(name = "gender", nullable = false, length = 10)
     private String gender;
 
+    @CreationTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime validatedAt;
 
 }
