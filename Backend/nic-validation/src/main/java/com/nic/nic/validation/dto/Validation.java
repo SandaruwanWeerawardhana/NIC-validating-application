@@ -1,6 +1,7 @@
 package com.nic.nic.validation.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import java.time.LocalDate;
@@ -21,8 +22,10 @@ public class Validation {
     )
     private String nicNumber;
 
-    @NotBlank(message = "DOB is required")
+    @NotNull(message = "DOB is required")
     private LocalDate dob;
+
+    private Integer age;
 
     @NotBlank(message = "Gender is required")
     private String gender;
