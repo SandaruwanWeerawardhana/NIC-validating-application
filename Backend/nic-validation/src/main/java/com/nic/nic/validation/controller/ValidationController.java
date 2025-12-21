@@ -18,8 +18,8 @@ public class ValidationController {
 
     private final ValidationService nicService;
     @PostMapping("/add")
-    public ResponseEntity<ValidationEntity> create(@RequestBody Validation request) {
-        ValidationEntity response = nicService.add(request);
+    public ResponseEntity<String> create(@RequestBody Validation request) {
+        String response = nicService.add(request);
         return ResponseEntity.ok(response);
     }
 
@@ -32,6 +32,13 @@ public class ValidationController {
     @GetMapping("/get")
     public List<Validation> getAll() {
         return nicService.getAll();
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ex.getMessage());
     }
 
 }
