@@ -17,8 +17,17 @@ public class ValidationService {
     
     private final ValidationRepository repository;
     private final ModelMapper mapper;
-    public ValidationEntity add(Validation request) {
-        return repository.save(mapper.map(request, ValidationEntity.class));
+    public String add(Validation request) {
+        if(request.getNicNumber().isEmpty() || request.getNicNumber().isBlank()) {
+            throw new IllegalArgumentException("NIC number is empty");
+        }
+        if(repository.existsByNicNumber(request.getNicNumber())) {
+            throw new IllegalArgumentException("NIC number already exists: " + request.getNicNumber());
+        }
+
+        ValidationEntity entity = mapper.map(request, ValidationEntity.class);
+        repository.save(entity);
+        return "Validation saved successfully";
     }
 
     public Validation validateByNic(String nicNumber) {
