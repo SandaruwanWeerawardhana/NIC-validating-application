@@ -64,7 +64,7 @@ const AddRecord = () => {
         <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4 md:col-span-2">
-              <label className="block text-sm font-medium text-slate-400 mb-1">
+              <label htmlFor="nic" className="block text-sm font-medium text-slate-400 mb-1">
                 NIC Number
               </label>
               <div className="relative">
@@ -73,6 +73,7 @@ const AddRecord = () => {
                   size={20}
                 />
                 <input
+                  id="nic"
                   type="text"
                   value={nic}
                   onChange={(e) => setNic(e.target.value)}
@@ -83,7 +84,7 @@ const AddRecord = () => {
             </div>
 
             <div className="space-y-4">
-              <label className="block text-sm font-medium text-slate-400 mb-1">
+              <label htmlFor="dob" className="block text-sm font-medium text-slate-400 mb-1">
                 Date of Birth
               </label>
               <div className="relative">
@@ -92,6 +93,7 @@ const AddRecord = () => {
                   size={20}
                 />
                 <input
+                  id="dob"
                   type="date"
                   value={dob}
                   onChange={(e) => setDob(e.target.value)}
@@ -101,7 +103,7 @@ const AddRecord = () => {
             </div>
 
             <div className="space-y-4">
-              <label className="block text-sm font-medium text-slate-400 mb-1">
+              <label htmlFor="gender" className="block text-sm font-medium text-slate-400 mb-1">
                 Gender
               </label>
               <div className="relative">
@@ -110,6 +112,7 @@ const AddRecord = () => {
                   size={20}
                 />
                 <select
+                  id="gender"
                   value={gender}
                   onChange={(e) =>
                     setGender(e.target.value as "Male" | "Female")

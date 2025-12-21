@@ -71,7 +71,11 @@ export const Layout = () => {
 
             {isMobileMenuOpen && (
                 <div className="fixed inset-0 z-40 md:hidden">
-                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={toggleMobileMenu}></div>
+                    <button 
+                        className="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-default" 
+                        onClick={toggleMobileMenu}
+                        aria-label="Close menu"
+                    />
 
                     <aside className="absolute top-0 left-0 w-3/4 max-w-sm h-full bg-slate-900/90 backdrop-blur-xl border-r border-white/10 flex flex-col animate-enter slide-right shadow-2xl">
                         <div className="p-6 border-b border-white/5 flex justify-between items-center">
