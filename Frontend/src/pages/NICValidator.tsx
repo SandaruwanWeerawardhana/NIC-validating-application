@@ -72,7 +72,7 @@ const NICValidator = () => {
 
         {/* Result Section */}
         <div className="space-y-6">
-          {result && result.isValid ? (
+          {result?.isValid ? (
             <Card className="bg-emerald-900/10 border-emerald-500/20 relative overflow-hidden stagger-1">
               <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl rounded-full"></div>
 

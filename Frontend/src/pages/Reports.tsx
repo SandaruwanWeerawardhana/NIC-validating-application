@@ -111,8 +111,8 @@ const Reports = () => {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-white/5">
-                                {records.map((r, i) => (
-                                    <tr key={i} className="hover:bg-white/5">
+                                {records.map((r) => (
+                                    <tr key={r.originalNic} className="hover:bg-white/5">
                                         <td className="px-4 py-2 font-mono text-white">{r.originalNic}</td>
                                         <td className="px-4 py-2">{r.birthDate ? format(r.birthDate, 'yyyy-MM-dd') : '-'}</td>
                                         <td className="px-4 py-2">
