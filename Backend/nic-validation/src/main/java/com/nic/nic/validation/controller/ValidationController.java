@@ -1,7 +1,6 @@
 package com.nic.nic.validation.controller;
 
 import com.nic.nic.validation.dto.Validation;
-import com.nic.nic.validation.entity.ValidationEntity;
 import com.nic.nic.validation.service.ValidationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

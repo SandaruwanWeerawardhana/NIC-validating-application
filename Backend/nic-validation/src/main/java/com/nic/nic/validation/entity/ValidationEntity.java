@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@Table(name = "nic_validation")
+@Table(name = "nic")
 public class ValidationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
