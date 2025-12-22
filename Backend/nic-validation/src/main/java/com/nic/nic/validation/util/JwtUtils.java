@@ -15,8 +15,8 @@ import java.util.function.Function;
 @Component
 public class JwtUtils {
 
-    private String SECRET_KEY = "secretKeyThatIsAtLeast256BitsLongForHS256Algorithm";
-    private SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+    private final String SECRET_KEY = "secretKeyThatIsAtLeast256BitsLongForHS256Algorithm";
+    private final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
