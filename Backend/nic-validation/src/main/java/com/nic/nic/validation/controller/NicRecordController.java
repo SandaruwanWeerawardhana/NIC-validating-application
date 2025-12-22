@@ -1,7 +1,7 @@
 package com.nic.nic.validation.controller;
 
-import com.nic.nic.validation.dto.Validation;
-import com.nic.nic.validation.service.ValidationService;
+import com.nic.nic.validation.dto.NicRecord;
+import com.nic.nic.validation.service.NicRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,23 +13,23 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("api/nic")
-public class ValidationController {
+public class NicRecordController {
 
-    private final ValidationService nicService;
+    private final NicRecordService nicService;
     @PostMapping("/add")
-    public ResponseEntity<String> create(@RequestBody Validation request) {
+    public ResponseEntity<String> create(@RequestBody NicRecord request) {
         String response = nicService.add(request);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/validate")
-    public ResponseEntity<Validation> validateByNic(@RequestParam("nic") String nic) {
-        Validation response = nicService.validateByNic(nic);
+    public ResponseEntity<NicRecord> validateByNic(@RequestParam("nic") String nic) {
+        NicRecord response = nicService.validateByNic(nic);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/get")
-    public List<Validation> getAll() {
+    public List<NicRecord> getAll() {
         return nicService.getAll();
     }
 

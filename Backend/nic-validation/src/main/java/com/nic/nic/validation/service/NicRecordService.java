@@ -1,8 +1,8 @@
 package com.nic.nic.validation.service;
 
-import com.nic.nic.validation.dto.Validation;
-import com.nic.nic.validation.entity.ValidationEntity;
-import com.nic.nic.validation.repository.ValidationRepository;
+import com.nic.nic.validation.dto.NicRecord;
+import com.nic.nic.validation.entity.NicRecordEntity;
+import com.nic.nic.validation.repository.NicRecordRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -13,11 +13,11 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ValidationService {
+public class NicRecordService {
     
-    private final ValidationRepository repository;
+    private final NicRecordRepository repository;
     private final ModelMapper mapper;
-    public String add(Validation request) {
+    public String add(NicRecord request) {
         if(request.getNicNumber().isEmpty() || request.getNicNumber().isBlank()) {
             throw new IllegalArgumentException("NIC number is empty");
         }
@@ -25,26 +25,26 @@ public class ValidationService {
             throw new IllegalArgumentException("NIC number already exists: " + request.getNicNumber());
         }
 
-        ValidationEntity entity = mapper.map(request, ValidationEntity.class);
+        NicRecordEntity entity = mapper.map(request, NicRecordEntity.class);
         repository.save(entity);
         return "Validation saved successfully";
     }
 
-    public Validation validateByNic(String nicNumber) {
-        ValidationEntity entity = repository.findByNicNumber(nicNumber)
+    public NicRecord validateByNic(String nicNumber) {
+        NicRecordEntity entity = repository.findByNicNumber(nicNumber)
                 .orElseThrow(() -> new RuntimeException("NIC not found: " + nicNumber));
-        Validation validation = mapper.map(entity, Validation.class);
-        validation.setAge(calculateAgeFromNic(entity.getDob()));
-        return validation;
+        NicRecord nicRecord = mapper.map(entity, NicRecord.class);
+        nicRecord.setAge(calculateAgeFromNic(entity.getDob()));
+        return nicRecord;
     }
 
-    public List<Validation> getAll() {
-        List<ValidationEntity> entity = repository.findAll();
+    public List<NicRecord> getAll() {
+        List<NicRecordEntity> entity = repository.findAll();
         return entity.stream()
                 .map(e ->{
-                    Validation validation = mapper.map(e, Validation.class);
-                    validation.setAge(calculateAgeFromNic(e.getDob()));
-                    return validation;
+                    NicRecord nicRecord = mapper.map(e, NicRecord.class);
+                    nicRecord.setAge(calculateAgeFromNic(e.getDob()));
+                    return nicRecord;
                 }).toList();
     }
 
