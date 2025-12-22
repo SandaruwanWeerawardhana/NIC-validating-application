@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Validation {
+public class NicRecord {
 
     private Long id;
 
