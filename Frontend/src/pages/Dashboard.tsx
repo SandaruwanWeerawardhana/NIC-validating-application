@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNicStore } from "../store/nicStore";
 import { Card } from "../components/Card";
-import { Users, User, UserCheck, FileDown, FileText } from "lucide-react";
+import { Users, User, UserCheck, FileDown, FileText, Loader2 } from "lucide-react";
 import { RecentValidations } from "../components/RecentValidations";
 import { Button } from "../components/Button";
 import { useNavigate } from "react-router-dom";
@@ -10,10 +10,24 @@ const Dashboard = () => {
   const records = useNicStore((state) => state.records);
   const fetchRecords = useNicStore((state) => state.fetchRecords);
   const navigate = useNavigate();
+  const [pdfLoading, setPdfLoading] = useState(false);
 
   useEffect(() => {
     fetchRecords();
   }, [fetchRecords]);
+
+  const handleDownloadPdf = async () => {
+    setPdfLoading(true);
+    try {
+      const downloadPdfReport = useNicStore.getState().downloadPdfReport;
+      await downloadPdfReport();
+    } catch (err) {
+      console.error("PDF download failed:", err);
+      alert(err instanceof Error ? err.message : "Failed to download PDF");
+    } finally {
+      setPdfLoading(false);
+    }
+  };
 
   const total = records.length;
   const male = records.filter((r) => r.gender === "Male").length;
@@ -59,11 +73,20 @@ const Dashboard = () => {
             <FileText size={16} /> Excel Report
           </Button>
           <Button
-            onClick={() => navigate("/reports#export")}
+            onClick={handleDownloadPdf}
+            disabled={pdfLoading}
             className="gap-2"
             size="sm"
           >
-            <FileDown size={16} /> PDF Report
+            {pdfLoading ? (
+              <>
+                <Loader2 size={16} className="animate-spin" /> Downloading...
+              </>
+            ) : (
+              <>
+                <FileDown size={16} /> PDF Report
+              </>
+            )}
           </Button>
         </div>
       </header>

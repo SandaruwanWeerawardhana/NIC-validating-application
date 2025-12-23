@@ -16,8 +16,8 @@ interface NicStoreState {
     gender: "Male" | "Female"
   ) => Promise<void>;
   validateNic: (nicNumber: string) => Promise<NICData>;
+  downloadPdfReport: () => Promise<void>;
   fetchRecords: () => Promise<void>;
-  deleteRecord: (index: number) => Promise<void>;
   setError: (error: string | null) => void;
   setSuccessMessage: (message: string | null) => void;
   clearMessages: () => void;
@@ -25,7 +25,7 @@ interface NicStoreState {
 
 const API_BASE_URL = "/api/nic";
 
-export const useNicStore = create<NicStoreState>((set, get) => ({
+export const useNicStore = create<NicStoreState>((set) => ({
   records: [],
   loading: false,
   error: null,
@@ -176,40 +176,31 @@ export const useNicStore = create<NicStoreState>((set, get) => ({
     }
   },
 
-  deleteRecord: async (index: number) => {
+  downloadPdfReport: async () => {
     set({ loading: true, error: null, successMessage: null });
     try {
-      const state = get();
-      const record = state.records[index];
-
-      if (!record) {
-        throw new Error("Record not found");
-      }
-
-      const response = await fetch(
-        `${API_BASE_URL}/records/${record.originalNic}`,
-        {
-          method: "DELETE",
-          headers: getAuthHeaders(),
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/report/pdf`, {
+        method: "GET",
+        headers: getAuthHeaders(),
+      });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(
-          errorData.message ||
-            `HTTP ${response.status}: Failed to delete record`
-        );
+        throw new Error(`HTTP ${response.status}: Failed to download PDF`);
       }
 
-      set((state) => ({
-        records: state.records.filter((_, i) => i !== index),
-        loading: false,
-        successMessage: "Record deleted successfully",
-      }));
+      const blob = await response.blob();
+      const url = globalThis.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `nic-report-${new Date().toISOString().split("T")[0]}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      globalThis.URL.revokeObjectURL(url);
+
+      set({ loading: false, successMessage: "PDF downloaded" });
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Failed to delete record";
+      const errorMessage = err instanceof Error ? err.message : "Failed to download PDF";
       set({ error: errorMessage, loading: false });
       throw err;
     }
