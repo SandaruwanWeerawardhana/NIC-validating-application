@@ -1,30 +1,46 @@
 import { useState } from "react";
-import { validateNic, type NICData } from "../utils/nicValidation";
+import { type NICData } from "../utils/nicValidation";
 import { useNicStore } from "../store/nicStore";
 import { Card } from "../components/Card";
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
-import { Search, RotateCcw, CheckCircle } from "lucide-react";
+import { Search, RotateCcw, CheckCircle, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 
 const NICValidator = () => {
   const [input, setInput] = useState("");
   const [result, setResult] = useState<NICData | null>(null);
-  const addRecord = useNicStore((state) => state.addRecord);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const validateNic = useNicStore((state) => state.validateNic);
 
-  const handleValidate = (e: React.FormEvent) => {
+  const handleValidate = async (e: React.FormEvent) => {
     e.preventDefault();
-    const validationResult = validateNic(input);
-    setResult(validationResult);
+    setError(null);
+    setResult(null);
 
-    if (validationResult.isValid) {
-      addRecord(validationResult);
+    if (!input.trim()) {
+      setError("Please enter a NIC number");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const validationResult = await validateNic(input.trim());
+      setResult(validationResult);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Validation failed";
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleReset = () => {
     setInput("");
     setResult(null);
+    setError(null);
   };
 
   return (
@@ -39,7 +55,6 @@ const NICValidator = () => {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Input Section */}
         <Card title="Input Details" className="h-fit">
           <form onSubmit={handleValidate} className="space-y-6">
             <Input
@@ -47,16 +62,24 @@ const NICValidator = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="e.g. 853400512V or 198534000512"
-              error={
-                result && !result.isValid && result.error
-                  ? result.error
-                  : undefined
-              }
+              error={error ?? undefined}
               className="text-lg tracking-wide"
             />
             <div className="flex gap-4 pt-2">
-              <Button type="submit" className="flex-1 gap-2 shadow-blue-500/20">
-                <Search size={18} /> Validate
+              <Button
+                type="submit"
+                disabled={loading}
+                className="flex-1 gap-2 shadow-blue-500/20"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" /> Validating...
+                  </>
+                ) : (
+                  <>
+                    <Search size={18} /> Validate
+                  </>
+                )}
               </Button>
               <Button
                 type="button"
@@ -70,7 +93,6 @@ const NICValidator = () => {
           </form>
         </Card>
 
-        {/* Result Section */}
         <div className="space-y-6">
           {result?.isValid ? (
             <Card className="bg-emerald-900/10 border-emerald-500/20 relative overflow-hidden stagger-1">
