@@ -8,29 +8,30 @@ import { Fingerprint } from 'lucide-react';
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const [localError, setLocalError] = useState('');
     const login = useAuthStore((state) => state.login);
+    const authLoading = useAuthStore((state) => state.authLoading);
+    const authError = useAuthStore((state) => state.authError);
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!username || !password) {
-            setError('Please fill in all fields');
+            setLocalError('Please fill in all fields');
             return;
         }
-        await new Promise(r => setTimeout(r, 800)); // Fake loading
+
         const success = await login(username, password);
         if (success) {
             navigate('/');
         } else {
-            setError('Invalid credentials');
+            setLocalError(authError || 'Invalid credentials');
         }
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4">
             <div className="w-full max-w-md glass-card p-8 animate-enter relative overflow-hidden">
-                {/* Decorative background glow inside card */}
                 <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
                 <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -63,9 +64,9 @@ const Login = () => {
                             />
                         </div>
 
-                        {error && <p className="text-red-400 text-sm text-center bg-red-500/10 py-2 rounded-lg border border-red-500/20 animate-enter">{error}</p>}
-                        <Button type="submit" className="w-full h-12 text-lg shadow-blue-900/20" size="lg">
-                            Sign In
+                        {(localError || authError) && <p className="text-red-400 text-sm text-center bg-red-500/10 py-2 rounded-lg border border-red-500/20 animate-enter">{localError || authError}</p>}
+                        <Button type="submit" disabled={authLoading} className="w-full h-12 text-lg shadow-blue-900/20" size="lg">
+                            {authLoading ? 'Signing In...' : 'Sign In'}
                         </Button>
                     </form>
 

@@ -5,7 +5,7 @@ import { LayoutDashboard, CreditCard, LogOut, Menu, X, PlusCircle } from 'lucide
 import { Button } from './Button';
 
 export const Layout = () => {
-    const { logout } = useAuthStore();
+    const logout = useAuthStore((state) => state.logout);
     const location = useLocation();
     const navigate = useNavigate();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
