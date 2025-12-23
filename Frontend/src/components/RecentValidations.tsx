@@ -32,17 +32,11 @@ export const RecentValidations: React.FC<RecentValidationsProps> = ({
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
-            {!hasRecords ? (
-              <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-slate-500">
-                  No recent validations
-                </td>
-              </tr>
-            ) : (
+            {hasRecords ? (
               records
                 .slice(0, maxRows)
-                .map((rec, idx) => (
-                  <tr key={idx} className="hover:bg-white/5 transition-colors">
+                .map((rec) => (
+                  <tr key={rec.originalNic} className="hover:bg-white/5 transition-colors">
                     <td className="px-4 py-3 font-medium text-white font-mono">
                       {rec.originalNic}
                     </td>
@@ -66,6 +60,12 @@ export const RecentValidations: React.FC<RecentValidationsProps> = ({
                     <td className="px-4 py-3 text-emerald-400 font-medium">Verified</td>
                   </tr>
                 ))
+            ) : (
+              <tr>
+                <td colSpan={5} className="px-4 py-8 text-center text-slate-500">
+                  No recent validations
+                </td>
+              </tr>
             )}
           </tbody>
         </table>

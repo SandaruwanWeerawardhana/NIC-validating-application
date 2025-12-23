@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
-import { LayoutDashboard, CreditCard, FileText, LogOut, Menu, X, PlusCircle } from 'lucide-react';
+import { LayoutDashboard, CreditCard, LogOut, Menu, X, PlusCircle } from 'lucide-react';
 import { Button } from './Button';
 
 export const Layout = () => {
@@ -20,8 +20,7 @@ export const Layout = () => {
     const navItems = [
         { path: '/', label: 'Dashboard', icon: LayoutDashboard },
         { path: '/validate', label: 'Validate NIC', icon: CreditCard },
-        { path: '/reports', label: 'Reports', icon: FileText },
-        { path: '/add', label: 'Add Data', icon: PlusCircle }, 
+        { path: '/add', label: 'Add NIC Data', icon: PlusCircle }, 
     ];
 
     return (
