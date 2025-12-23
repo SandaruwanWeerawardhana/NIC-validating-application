@@ -4,13 +4,12 @@ import { Card } from "../components/Card";
 import { Users, User, UserCheck, FileDown, FileText, Loader2 } from "lucide-react";
 import { RecentValidations } from "../components/RecentValidations";
 import { Button } from "../components/Button";
-import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const records = useNicStore((state) => state.records);
   const fetchRecords = useNicStore((state) => state.fetchRecords);
-  const navigate = useNavigate();
   const [pdfLoading, setPdfLoading] = useState(false);
+  const [excelLoading, setExcelLoading] = useState(false);
 
   useEffect(() => {
     fetchRecords();
@@ -26,6 +25,19 @@ const Dashboard = () => {
       alert(err instanceof Error ? err.message : "Failed to download PDF");
     } finally {
       setPdfLoading(false);
+    }
+  };
+
+  const handleDownloadExcel = async () => {
+    setExcelLoading(true);
+    try {
+      const downloadExcelReport = useNicStore.getState().downloadExcelReport;
+      await downloadExcelReport();
+    } catch (err) {
+      console.error("Excel download failed:", err);
+      alert(err instanceof Error ? err.message : "Failed to download Excel");
+    } finally {
+      setExcelLoading(false);
     }
   };
 
@@ -66,11 +78,20 @@ const Dashboard = () => {
         </div>
         <div className="flex items-center gap-5">
           <Button
-            onClick={() => navigate("/reports#summary")}
+            onClick={handleDownloadExcel}
+            disabled={excelLoading}
             className="gap-2"
             size="sm"
           >
-            <FileText size={16} /> Excel Report
+            {excelLoading ? (
+              <>
+                <Loader2 size={16} className="animate-spin" /> Downloading...
+              </>
+            ) : (
+              <>
+                <FileText size={16} /> Excel Report
+              </>
+            )}
           </Button>
           <Button
             onClick={handleDownloadPdf}

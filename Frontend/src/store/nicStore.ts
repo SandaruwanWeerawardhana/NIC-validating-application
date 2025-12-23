@@ -17,6 +17,7 @@ interface NicStoreState {
   ) => Promise<void>;
   validateNic: (nicNumber: string) => Promise<NICData>;
   downloadPdfReport: () => Promise<void>;
+  downloadExcelReport: () => Promise<void>;
   fetchRecords: () => Promise<void>;
   setError: (error: string | null) => void;
   setSuccessMessage: (message: string | null) => void;
@@ -201,6 +202,36 @@ export const useNicStore = create<NicStoreState>((set) => ({
       set({ loading: false, successMessage: "PDF downloaded" });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to download PDF";
+      set({ error: errorMessage, loading: false });
+      throw err;
+    }
+  },
+
+  downloadExcelReport: async () => {
+    set({ loading: true, error: null, successMessage: null });
+    try {
+      const response = await fetch(`${API_BASE_URL}/report/excel`, {
+        method: "GET",
+        headers: getAuthHeaders(),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: Failed to download Excel`);
+      }
+
+      const blob = await response.blob();
+      const url = globalThis.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `nic-report-${new Date().toISOString().split("T")[0]}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      globalThis.URL.revokeObjectURL(url);
+
+      set({ loading: false, successMessage: "Excel downloaded" });
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to download Excel";
       set({ error: errorMessage, loading: false });
       throw err;
     }
