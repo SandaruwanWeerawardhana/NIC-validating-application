@@ -1,52 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { differenceInYears } from "date-fns";
 import { useNicStore } from "../store/nicStore";
 import { Button } from "../components/Button";
 import { Card } from "../components/Card";
 import { PlusCircle, Calendar, User, CreditCard } from "lucide-react";
-import type { NICData } from "../utils/nicValidation";
 
 const AddRecord = () => {
   const [nic, setNic] = useState("");
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState<"Male" | "Female">("Male");
-  const [error, setError] = useState("");
+  const [localError, setLocalError] = useState("");
 
-  const addRecord = useNicStore((state) => state.addRecord);
+  const validateAndAddNic = useNicStore((state) => state.validateAndAddNic);
+  const loading = useNicStore((state) => state.loading);
+  const storeError = useNicStore((state) => state.error);
+  const successMessage = useNicStore((state) => state.successMessage);
+  const clearMessages = useNicStore((state) => state.clearMessages);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    clearMessages();
+  }, [clearMessages]);
+
+  useEffect(() => {
+    if (successMessage) {
+      setNic("");
+      setDob("");
+      setGender("Male");
+    }
+  }, [successMessage]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setLocalError("");
+    clearMessages();
 
     if (!nic || !dob) {
-      setError("Please fill in all required fields");
+      setLocalError("Please fill in all required fields");
       return;
     }
 
     const birthDate = new Date(dob);
-    const age = differenceInYears(new Date(), birthDate);
+    const age = new Date().getFullYear() - birthDate.getFullYear();
 
     if (age < 0 || age > 120) {
-      setError("Invalid date of birth");
+      setLocalError("Invalid date of birth");
       return;
     }
 
-    let type: "old" | "new" = "new";
-    if (nic.length === 10) type = "old";
-
-    const newRecord: NICData = {
-      isValid: true,
-      type,
-      gender,
-      birthDate,
-      age,
-      originalNic: nic.toUpperCase(),
-    };
-
-    addRecord(newRecord);
-    navigate("/");
+    try {
+      await validateAndAddNic(nic, dob, gender);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -64,7 +70,10 @@ const AddRecord = () => {
         <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4 md:col-span-2">
-              <label htmlFor="nic" className="block text-sm font-medium text-slate-400 mb-1">
+              <label
+                htmlFor="nic"
+                className="block text-sm font-medium text-slate-400 mb-1"
+              >
                 NIC Number
               </label>
               <div className="relative">
@@ -84,7 +93,10 @@ const AddRecord = () => {
             </div>
 
             <div className="space-y-4">
-              <label htmlFor="dob" className="block text-sm font-medium text-slate-400 mb-1">
+              <label
+                htmlFor="dob"
+                className="block text-sm font-medium text-slate-400 mb-1"
+              >
                 Date of Birth
               </label>
               <div className="relative">
@@ -103,7 +115,10 @@ const AddRecord = () => {
             </div>
 
             <div className="space-y-4">
-              <label htmlFor="gender" className="block text-sm font-medium text-slate-400 mb-1">
+              <label
+                htmlFor="gender"
+                className="block text-sm font-medium text-slate-400 mb-1"
+              >
                 Gender
               </label>
               <div className="relative">
@@ -130,18 +145,46 @@ const AddRecord = () => {
             </div>
           </div>
 
-          {error && (
-            <p className="text-red-400 text-sm bg-red-500/10 py-2 px-4 rounded-lg border border-red-500/20">
-              {error}
-            </p>
+          {localError && (
+            <div className="text-red-400 text-sm bg-red-500/10 py-3 px-4 rounded-lg border border-red-500/30 animate-enter">
+              <div className="flex items-start gap-3">
+                <span className="text-xl">✕</span>
+                <div>
+                  <p className="font-medium">Error</p>
+                  <p className="text-red-300 mt-1">{localError}</p>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {successMessage && !localError && !storeError && (
+            <div className="text-green-400 text-sm bg-green-500/10 py-3 px-4 rounded-lg border border-green-500/30 animate-enter">
+              <div className="flex items-start gap-3">
+                <span className="text-xl">✓</span>
+                <div>
+                  <p className="font-medium">Success</p>
+                  <p className="text-green-300 mt-1">{successMessage}</p>
+                </div>
+              </div>
+            </div>
           )}
 
           <div className="pt-4 flex gap-4">
             <Button
               type="submit"
+              disabled={loading}
               className="flex-1 gap-2 shadow-emerald-500/20 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500"
             >
-              <PlusCircle size={20} /> Add Record
+              {loading ? (
+                <>
+                  <span className="inline-block animate-spin">⏳</span>{" "}
+                  Adding...
+                </>
+              ) : (
+                <>
+                  <PlusCircle size={20} /> Add Record
+                </>
+              )}
             </Button>
             <Button
               type="button"
