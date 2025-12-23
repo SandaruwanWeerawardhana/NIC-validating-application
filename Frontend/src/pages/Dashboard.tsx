@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNicStore } from "../store/nicStore";
 import { Card } from "../components/Card";
 import { Users, User, UserCheck, FileDown, FileText } from "lucide-react";
@@ -7,7 +8,12 @@ import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const records = useNicStore((state) => state.records);
+  const fetchRecords = useNicStore((state) => state.fetchRecords);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchRecords();
+  }, [fetchRecords]);
 
   const total = records.length;
   const male = records.filter((r) => r.gender === "Male").length;

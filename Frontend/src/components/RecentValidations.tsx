@@ -25,10 +25,9 @@ export const RecentValidations: React.FC<RecentValidationsProps> = ({
           <thead className="text-slate-400 font-medium border-b border-white/5">
             <tr>
               <th className="px-4 py-4">NIC Number</th>
-              <th className="px-4 py-4">Format</th>
+              <th className="px-4 py-4">Age</th>
               <th className="px-4 py-4">Date of Birth</th>
               <th className="px-4 py-4">Gender</th>
-              <th className="px-4 py-4">Status</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
@@ -41,23 +40,15 @@ export const RecentValidations: React.FC<RecentValidationsProps> = ({
                       {rec.originalNic}
                     </td>
                     <td className="px-4 py-3 capitalize text-slate-300">
-                      {rec.type ?? "-"}
+                      {rec.age ?? "-"}
                     </td>
                     <td className="px-4 py-3 text-slate-400">
                       {rec.birthDate ? format(rec.birthDate, "yyyy-MM-dd") : "-"}
                     </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-                          rec.gender === "Male"
-                            ? "bg-blue-500/20 text-blue-300"
-                            : "bg-pink-500/20 text-pink-300"
-                        }`}
-                      >
-                        {rec.gender ?? "-"}
-                      </span>
+                    <td className="px-4 py-3 text-slate-300">
+                      {rec.gender ?? "-"}
                     </td>
-                    <td className="px-4 py-3 text-emerald-400 font-medium">Verified</td>
+
                   </tr>
                 ))
             ) : (
