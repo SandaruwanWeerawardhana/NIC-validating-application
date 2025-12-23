@@ -57,7 +57,7 @@ export const Layout = () => {
                     })}
                 </nav>
 
-                <div className="p-6 border-t border-white/5 bg-black/10">
+                <div className="p-6 border-t border-red-500/80 bg-black/10">
                     <button
                         onClick={handleLogout}
                         className="flex items-center gap-3 px-4 py-3 w-full text-left text-red-400 hover:bg-red-500/10 hover:text-red-300 rounded-xl transition-colors"
