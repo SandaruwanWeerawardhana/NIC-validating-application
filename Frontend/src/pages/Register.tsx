@@ -11,8 +11,9 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [localError, setLocalError] = useState("");
 
-  const registerViaApi = useAuthStore((state) => state.registerViaApi);
-  const loading = useAuthStore((state) => state.loading);
+  const registerViaApi = useAuthStore((state) => state.register);
+  const loading = useAuthStore((state) => state.authLoading);
+  const authError = useAuthStore((state) => state.authError);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,7 +35,7 @@ const Register = () => {
       alert("Registration successful! Please log in.");  
       navigate("/login");
     } else {
-      setLocalError("Registration failed. Please try again.");
+      setLocalError(authError || 'Registration failed. Please try again.');
     }
   };
 
