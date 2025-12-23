@@ -91,7 +91,7 @@ export const useNicStore = create<NicStoreState>((set, get) => ({
   fetchRecords: async () => {
     set({ loading: true, error: null, successMessage: null });
     try {
-      const response = await fetch(`${API_BASE_URL}/records`, {
+      const response = await fetch(`${API_BASE_URL}/get`, {
         method: "GET",
         headers: getAuthHeaders(),
       });
@@ -101,7 +101,16 @@ export const useNicStore = create<NicStoreState>((set, get) => ({
       }
 
       const data = await response.json();
-      const records = Array.isArray(data) ? data : data.records || [];
+      const rawRecords = Array.isArray(data) ? data : [data];
+
+      const records: NICData[] = rawRecords.map((item: any) => ({
+        isValid: true,
+        type: item.nicNumber?.length === 10 ? ("old" as const) : ("new" as const),
+        gender: item.gender,
+        birthDate: new Date(item.dob),
+        age: item.age,
+        originalNic: item.nicNumber,
+      })).filter((record) => record.originalNic); 
 
       set({ records, loading: false, successMessage: `${records.length} records loaded` });
     } catch (err) {
