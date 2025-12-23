@@ -1,10 +1,13 @@
 import { useNicStore } from "../store/nicStore";
 import { Card } from "../components/Card";
-import { Users, User, UserCheck } from "lucide-react";
+import { Users, User, UserCheck, FileDown, FileText } from "lucide-react";
 import { RecentValidations } from "../components/RecentValidations";
+import { Button } from "../components/Button";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const records = useNicStore((state) => state.records);
+  const navigate = useNavigate();
 
   const total = records.length;
   const male = records.filter((r) => r.gender === "Male").length;
@@ -36,9 +39,27 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-8">
-      <header className="mb-8">
-        <h2 className="text-3xl font-bold text-white mb-2">Dashboard</h2>
-        <p className="text-slate-400">System overview and statistics</p>
+      <header className="mb-8 flex items-center justify-between gap-4">
+        <div>
+          <h2 className="text-3xl font-bold text-white mb-2">Dashboard</h2>
+          <p className="text-slate-400">System overview and statistics</p>
+        </div>
+        <div className="flex items-center gap-5">
+          <Button
+            onClick={() => navigate("/reports#summary")}
+            className="gap-2"
+            size="sm"
+          >
+            <FileText size={16} /> Excel Report
+          </Button>
+          <Button
+            onClick={() => navigate("/reports#export")}
+            className="gap-2"
+            size="sm"
+          >
+            <FileDown size={16} /> PDF Report
+          </Button>
+        </div>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
