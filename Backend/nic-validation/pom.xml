@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.nic</groupId>
-	<artifactId>nic-validation</artifactId>
+	<artifactId>nic-nicRecord</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>nic-validation</name>
+	<name>nic-nicRecord</name>
 	<description>NIC Validating Application </description>
 	<url/>
 	<licenses>
@@ -85,6 +85,24 @@
 			<artifactId>jjwt-jackson</artifactId>
 			<version>0.12.3</version>
 			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.librepdf</groupId>
+			<artifactId>openpdf</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>5.2.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>5.2.5</version>
 		</dependency>
 
 	</dependencies>
