@@ -17,3 +17,6 @@ spring:
     show-sql: true
     properties:
       hibernate:
+
+jwt:
+  secret: ${JWT_SECRET:1f42001bbc99d6b45f5de37b4589104c8856a2793bbb2a1c17fb1f35c4029eb1}
