@@ -26,7 +26,7 @@ The NIC Validating Application is designed to validate Sri Lankan National Ident
 - **Gender** - Determined from the NIC encoding
 - **Validation Status** - Confirms if the NIC format is valid
 
-The application features a modern, glassmorphism-styled UI with secure JWT-based authentication, allowing users to manage their NIC validation history and generate downloadable reports.
+The application features a modern, glassmorphism-styled UI with secure JWT-based authentication, allowing users to manage their NIC validation history, view dashboard statistics, and generate downloadable reports.
 
 ---
 
@@ -41,18 +41,23 @@ The application features a modern, glassmorphism-styled UI with secure JWT-based
 ### NIC Validation
 - Support for both old (9 digits + V/X) and new (13 digits) NIC formats
 - Automatic extraction of birth date, age, and gender
-- Real-time validation feedback
+- Real-time validation feedback with toast notifications
 - History tracking of all validated NICs
 
 ### Dashboard & Records
 - View all validated NIC records
 - Real-time statistics and recent validations
 - Add new NIC records to the system
-- Modern responsive UI with glassmorphism design
+- Modern responsive UI with glassmorphism design and animations
 
 ### Report Generation
 - **PDF Reports** - Download NIC records as formatted PDF documents
 - **Excel Reports** - Export data to Excel spreadsheets for analysis
+
+### Containerization
+- Fully containerized using Docker
+- Easy orchestration with Docker Compose (MySQL, Backend, Frontend)
+- Production-ready build configuration
 
 ---
 
@@ -61,28 +66,29 @@ The application features a modern, glassmorphism-styled UI with secure JWT-based
 ### Frontend
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| React | 19.2.0 | UI Framework |
-| TypeScript | 5.9.3 | Type-safe JavaScript |
-| Vite | 7.2.4 | Build tool & dev server |
-| TailwindCSS | 3.4.17 | Utility-first CSS framework |
-| Zustand | 5.0.9 | State management |
-| React Router DOM | 7.11.0 | Client-side routing |
-| Axios | 1.13.2 | HTTP client |
-| Lucide React | 0.562.0 | Icon library |
+| React | 19.x | UI Framework |
+| TypeScript | 5.9 | Type-safe JavaScript |
+| Vite | 7.x | Build tool & dev server |
+| TailwindCSS | 3.4 | Utility-first CSS framework |
+| Zustand | 5.0 | State management |
+| React Router | 7.x | Client-side routing |
+| Axios | 1.13 | HTTP client |
+| React Hot Toast | 2.5 | Notification system |
+| Lucide React | 0.562 | Icon library |
 
 ### Backend
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| Java | 22 | Programming language |
+| Java | 21 | Programming language |
 | Spring Boot | 4.0.1 | Backend framework |
-| Spring Security | - | Authentication & authorization |
-| Spring Data JPA | - | Database ORM |
-| MySQL | - | Relational database |
+| Spring Security | 6.x | Authentication & authorization |
+| Spring Data JPA | 3.x | Database ORM |
+| MySQL | 8.x | Relational database |
 | JWT (jjwt) | 0.12.3 | Token-based authentication |
-| Lombok | 1.18.36 | Boilerplate reduction |
-| ModelMapper | 3.2.2 | Object mapping |
-| OpenPDF | 3.0.0 | PDF generation |
-| Apache POI | 5.2.5 | Excel file generation |
+| Lombok | 1.18 | Boilerplate reduction |
+| ModelMapper | 3.2 | Object mapping |
+| OpenPDF | 3.0 | PDF generation |
+| Apache POI | 5.2 | Excel file generation |
 
 ---
 
@@ -115,8 +121,8 @@ The application features a modern, glassmorphism-styled UI with secure JWT-based
 │  │ Controllers │  │  Services   │  │    Config   │  │   Utils    │  │
 │  │ - Auth      │  │ - Auth      │  │ - Security  │  │ - JWT      │  │
 │  │ - NicRecord │  │ - NicRecord │  │ - CORS      │  │ - NIC      │  │
-│  │ - Report    │  │ - PDF       │  │ - JWT       │  │   Parser   │  │
-│  │             │  │ - Excel     │  │             │  │            │  │
+│  │ - Report    │  │ - Report    │  │ - JWT       │  │   Parser   │  │
+│  │             │  │             │  │             │  │            │  │
 │  └─────────────┘  └─────────────┘  └─────────────┘  └────────────┘  │
 │                                                                     │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐                  │
@@ -143,53 +149,44 @@ NIC Validating Application/
 │
 ├── Backend/
 │   └── nic-validation/
+│       ├── Dockerfile                       # Backend container definition
 │       ├── pom.xml                          # Maven dependencies
-│       ├── mvnw / mvnw.cmd                  # Maven wrapper scripts
 │       └── src/
 │           ├── main/
 │           │   ├── java/com/nic/nic/validation/
-│           │   │   ├── Main.java            # Application entry point
-│           │   │   ├── config/              # Security, JWT, CORS config
-│           │   │   ├── controller/          # REST API controllers
-│           │   │   │   ├── AuthController.java
-│           │   │   │   ├── NicRecordController.java
-│           │   │   │   └── ReportController.java
+│           │   │   ├── config/              # Security, JWT, CORS
+│           │   │   ├── controller/          # REST API endpoints
 │           │   │   ├── dto/                 # Data Transfer Objects
-│           │   │   ├── entity/              # JPA entities
-│           │   │   ├── repository/          # Data access layer
-│           │   │   ├── service/             # Business logic layer
-│           │   │   └── util/                # Utility classes
+│           │   │   ├── entity/              # Database entities
+│           │   │   ├── repository/          # JPA Repositories
+│           │   │   ├── service/             # Business Logic
+│           │   │   ├── util/                # PDF/Excel Generators
+│           │   │   └── Main.java
 │           │   └── resources/
-│           │       └── application.yaml     # App configuration
-│           └── test/                        # Test files
+│           │       └── application.yaml     # App config
+│           └── test/
 │
 ├── Frontend/
+│   ├── Dockerfile                           # Frontend container definition
 │   ├── package.json                         # NPM dependencies
-│   ├── vite.config.ts                       # Vite configuration
-│   ├── tailwind.config.js                   # Tailwind CSS config
-│   ├── tsconfig.json                        # TypeScript config
-│   ├── public/                              # Static assets
+│   ├── vite.config.ts                       # Vite config & Proxy
+│   ├── tailwind.config.js                   # Tailwind Setup
 │   └── src/
-│       ├── App.tsx                          # Root component & routing
-│       ├── main.tsx                         # Application entry point
-│       ├── index.css                        # Global styles
-│       ├── components/                      # Reusable UI components
-│       │   ├── Button.tsx
-│       │   ├── Card.tsx
-│       │   ├── Input.tsx
-│       │   ├── Layout.tsx
-│       │   ├── ProtectedRoute.tsx
-│       │   └── RecentValidations.tsx
-│       ├── pages/                           # Application pages
+│       ├── App.tsx                          # Root component
+│       ├── main.tsx                         # Entry point
+│       ├── components/                      # Shared Components
+│       │   ├── ui/                          # Base UI elements
+│       │   ├── Layout.tsx                   # Main Layout
+│       │   └── ...
+│       ├── pages/                           # Application Pages
 │       │   ├── Login.tsx
-│       │   ├── Register.tsx
 │       │   ├── Dashboard.tsx
-│       │   ├── NICValidator.tsx
-│       │   └── AddRecord.tsx
-│       ├── store/                           # Zustand state management
-│       ├── types/                           # TypeScript type definitions
-│       └── utils/                           # Helper functions
+│       │   ├── NICValidator.tsx             # Validation logic
+│       │   └── ...
+│       ├── store/                           # Zustand Stores
+│       └── utils/                           # Validators
 │
+├── docker-compose.yml                       # Docker orchestration
 └── README.md
 ```
 
@@ -197,254 +194,89 @@ NIC Validating Application/
 
 ## ⚙️ Setup Instructions
 
-### Prerequisites
+### 🐳 Docker Setup (Recommended)
 
-- **Node.js** v18 or above
-- **npm** or **yarn** package manager
-- **Java** 22 or above (JDK)
-- **Maven** (included via Maven Wrapper)
-- **MySQL** Server 8.0+
+The easiest way to run the application is using Docker Compose.
 
-### Database Setup
+1.  **Prerequisites:** Ensure Docker and Docker Compose are installed.
+2.  **Build the Backend JAR:**
+    Before running docker-compose for the first time, you must build the backend JAR file locally.
+    ```bash
+    cd Backend/nic-validation
+    # Windows
+    mvnw.cmd package -Dmaven.test.skip=true
+    # Linux/Mac
+    ./mvnw package -Dmaven.test.skip=true
+    ```
+3.  **Run with Docker Compose:**
+    Go back to the project root and start the services.
+    ```bash
+    cd ../..
+    docker-compose up --build
+    ```
+4.  **Access the Application:**
+    - Frontend: [http://localhost:5173](http://localhost:5173)
+    - Backend API: [http://localhost:8080/api/nic](http://localhost:8080/api/nic)
+    - MySQL Database: Port 3307 (User: `user`, Pass: `1234`)
 
-1. Install and start MySQL Server
-2. Create a database (optional - will be auto-created):
-   ```sql
-   CREATE DATABASE nicdb;
-   ```
-3. Default credentials in `application.yaml`:
-   - URL: `jdbc:mysql://localhost:3306/nicdb`
-   - Username: `root`
-   - Password: `1234`
+### 🔧 Manual Setup
 
-> **Note:** You can override these using environment variables: `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`
+#### Prerequisites
+- Node.js v18+
+- Java 22 (JDK)
+- MySQL Server 8.0+
 
-### Backend Setup
+#### Database Setup
+1. Create a database named `nicdb`.
+2. Update `Backend/nic-validation/src/main/resources/application.yaml` with your credentials.
 
-1. Open a terminal and navigate to the backend directory:
-   ```sh
-   cd Backend/nic-validation
-   ```
+#### Backend
+1. Navigate to `Backend/nic-validation`
+2. Run: `mvnw.cmd spring-boot:run` (Windows) or `./mvnw spring-boot:run` (Linux/Mac)
+3. Starts on port 8080.
 
-2. Build the project:
-   ```sh
-   # On Linux/Mac
-   ./mvnw clean install
-
-   # On Windows
-   mvnw.cmd clean install
-   ```
-
-3. Run the backend server:
-   ```sh
-   # On Linux/Mac
-   ./mvnw spring-boot:run
-
-   # On Windows
-   mvnw.cmd spring-boot:run
-   ```
-
-4. The backend will start on [http://localhost:8080](http://localhost:8080)
-
-### Frontend Setup
-
-1. Open a terminal and navigate to the frontend directory:
-   ```sh
-   cd Frontend
-   ```
-
-2. Install dependencies:
-   ```sh
-   npm install
-   ```
-
-3. Start the development server:
-   ```sh
-   npm run dev
-   ```
-
-4. The frontend will start on [http://localhost:5173](http://localhost:5173)
-
----
-
-## 🚀 How to Run the Application
-
-### Development Mode
-
-1. **Start MySQL Server** - Ensure MySQL is running on port 3306
-
-2. **Start the Backend Server**:
-   ```sh
-   cd Backend/nic-validation
-   mvnw.cmd spring-boot:run    # Windows
-   ./mvnw spring-boot:run      # Linux/Mac
-   ```
-
-3. **Start the Frontend Development Server**:
-   ```sh
-   cd Frontend
-   npm run dev
-   ```
-
-4. **Access the Application**: Open [http://localhost:5173](http://localhost:5173) in your browser
-
-### Production Build
-
-#### Frontend Production Build
-```sh
-cd Frontend
-npm run build
-npm run preview    # Preview production build
-```
-
-#### Backend Production Build
-```sh
-cd Backend/nic-validation
-./mvnw clean package -DskipTests
-java -jar target/nic-nicRecord-0.0.1-SNAPSHOT.jar
-```
+#### Frontend
+1. Navigate to `Frontend`
+2. Run: `npm install`
+3. Run: `npm run dev`
+4. Starts on port 5173.
 
 ---
 
 ## 🔌 API Endpoints
 
-### Base URL
-```
-http://localhost:8080/api/nic
-```
+### Base URL: `/api/nic`
 
-### Authentication Endpoints
-
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| `POST` | `/auth/register` | Register a new user | ❌ |
-| `POST` | `/auth/login` | Authenticate user & get JWT | ❌ |
-| `POST` | `/auth/logout` | End user session | ✅ |
-
-#### Register User
-```http
-POST /api/nic/auth/register
-Content-Type: application/json
-
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "securePassword123"
-}
-```
-
-#### Login
-```http
-POST /api/nic/auth/login
-Content-Type: application/json
-
-{
-  "email": "john@example.com",
-  "password": "securePassword123"
-}
-
-Response:
-{
-  "token": "eyJhbGciOiJIUzI1NiJ9...",
-  "message": "Login successful"
-}
-```
-
----
-
-### NIC Record Endpoints
-
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| `POST` | `/add` | Add a new NIC record | ✅ |
-| `POST` | `/validate?nic={nicNumber}` | Validate a NIC number | ✅ |
-| `GET` | `/get` | Get all NIC records | ✅ |
-
-#### Add NIC Record
-```http
-POST /api/nic/add
-Authorization: Bearer <jwt_token>
-Content-Type: application/json
-
-{
-  "nic": "200012345678"
-}
-```
-
-#### Validate NIC
-```http
-POST /api/nic/validate?nic=200012345678
-Authorization: Bearer <jwt_token>
-
-Response:
-{
-  "nic": "200012345678",
-  "birthday": "2000-01-12",
-  "age": 24,
-  "gender": "Male"
-}
-```
-
-#### Get All Records
-```http
-GET /api/nic/get
-Authorization: Bearer <jwt_token>
-
-Response:
-[
-  {
-    "nic": "200012345678",
-    "birthday": "2000-01-12",
-    "age": 24,
-    "gender": "Male"
-  },
-  ...
-]
-```
-
----
-
-### Report Generation Endpoints
-
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| `GET` | `/report/pdf` | Download PDF report | ✅ |
-| `GET` | `/report/excel` | Download Excel report | ✅ |
-
-#### Download PDF Report
-```http
-GET /api/nic/report/pdf
-Authorization: Bearer <jwt_token>
-
-Response: Binary PDF file (nic-report.pdf)
-```
-
-#### Download Excel Report
-```http
-GET /api/nic/report/excel
-Authorization: Bearer <jwt_token>
-
-Response: Binary Excel file (nic-report.xlsx)
-```
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| **Auth** | | | |
+| `POST` | `/auth/register` | ❌ | Register new user |
+| `POST` | `/auth/login` | ❌ | Login and get JWT |
+| `POST` | `/auth/logout` | ✅ | Logout session |
+| **NIC Operations** | | | |
+| `POST` | `/add` | ✅ | Save a validated NIC record |
+| `POST` | `/validate` | ✅ | Validate NIC (Query param: `?nic=...`) |
+| `GET` | `/get` | ✅ | Fetch all NIC records |
+| **Reports** | | | |
+| `GET` | `/report/pdf` | ✅ | Download PDF Report |
+| `GET` | `/report/excel` | ✅ | Download Excel Report |
 
 ---
 
 ## 📝 Environment Variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `SERVER_PORT` | 8080 | Backend server port |
-| `DB_URL` | jdbc:mysql://localhost:3306/nicdb | MySQL connection URL |
-| `DB_USERNAME` | root | Database username |
-| `DB_PASSWORD` | 1234 | Database password |
-| `JWT_SECRET` | (default key) | Secret key for JWT signing |
+The application uses the following environment variables (defined in `docker-compose.yml` or `application.yaml`):
+
+| Variable | Description | Default (Docker) |
+|----------|-------------|-------------------|
+| `DB_URL` | JDBC Connection URL | `jdbc:mysql://mysql:3306/nicdb...` |
+| `DB_USERNAME` | Database User | `user` |
+| `DB_PASSWORD` | Database Password | `1234` |
+| `MYSQL_ROOT_PASSWORD` | Root Password | `1234` |
+| `JWT_SECRET` | Secret for Tokens | (Secure Random String) |
 
 ---
 
 ## 📄 License
 
 This project is open source and available for educational purposes.
-
----
-
-For more details, see the code and comments in each folder.
