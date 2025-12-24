@@ -25,7 +25,7 @@ interface NicStoreState {
   clearMessages: () => void;
 }
 
-const API_BASE_URL = "/api/nic";
+const API_BASE_URL = "http://localhost:8080/api/nic";
 
 export const useNicStore = create<NicStoreState>((set) => ({
   records: [],
