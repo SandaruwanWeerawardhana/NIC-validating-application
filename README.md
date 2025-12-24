@@ -276,6 +276,17 @@ The application uses the following environment variables (defined in `docker-com
 | `JWT_SECRET` | Secret for Tokens | (Secure Random String) |
 
 ---
+## Screenshots
+<div align ="center">
+  
+<img width="1911" height="896" alt="register" src="https://github.com/user-attachments/assets/a461e521-706d-4357-a029-c7935d3726a7" />
+<img width="1911" height="887" alt="login" src="https://github.com/user-attachments/assets/628ae300-1032-4755-adfe-bea27f09d253" />
+<img width="1893" height="901" alt="n1" src="https://github.com/user-attachments/assets/a15c342e-bf12-4fa1-a726-aa2ec2062550" />
+<img width="1913" height="908" alt="n2" src="https://github.com/user-attachments/assets/21962840-05a7-494e-a2e4-bbb1aa373ffa" />
+<img width="1913" height="897" alt="n3" src="https://github.com/user-attachments/assets/a780daf8-b18b-45cc-88c2-94d4ae55d2ef" />
+
+</div>
+---
 
 ## 📄 License
 
