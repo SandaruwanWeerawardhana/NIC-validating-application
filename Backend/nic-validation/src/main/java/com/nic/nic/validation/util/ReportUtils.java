@@ -30,7 +30,7 @@ public class ReportUtils {
             try {
                 int calculatedAge = Period.between(dob, LocalDate.now()).getYears();
                 return String.valueOf(calculatedAge);
-            } catch (Exception _) {
+            } catch (Exception err) {
                 return DEFAULT_VALUE;
             }
         }
