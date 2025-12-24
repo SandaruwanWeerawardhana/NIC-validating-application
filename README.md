@@ -196,28 +196,52 @@ NIC Validating Application/
 
 ### 🐳 Docker Setup (Recommended)
 
-The easiest way to run the application is using Docker Compose.
+The easiest way to run the application is using Docker Compose. This ensures all services (Frontend, Backend, Database) run together in an isolated environment.
 
-1.  **Prerequisites:** Ensure Docker and Docker Compose are installed.
-2.  **Build the Backend JAR:**
-    Before running docker-compose for the first time, you must build the backend JAR file locally.
-    ```bash
-    cd Backend/nic-validation
-    # Windows
-    mvnw.cmd package -Dmaven.test.skip=true
-    # Linux/Mac
-    ./mvnw package -Dmaven.test.skip=true
-    ```
-3.  **Run with Docker Compose:**
-    Go back to the project root and start the services.
-    ```bash
-    cd ../..
-    docker-compose up --build
-    ```
-4.  **Access the Application:**
-    - Frontend: [http://localhost:5173](http://localhost:5173)
-    - Backend API: [http://localhost:8080/api/nic](http://localhost:8080/api/nic)
-    - MySQL Database: Port 3307 (User: `user`, Pass: `1234`)
+#### 1. Prerequisites
+- Ensure **Docker Desktop** is installed and running.
+- Ensure **Java 22 (JDK)** is installed (for building the JAR).
+
+#### 2. Build the Backend JAR
+The Docker configuration uses a pre-built JAR file. You **must** run this command locally before starting Docker.
+
+**Windows (PowerShell/CMD):**
+```powershell
+cd Backend/nic-validation
+mvnw.cmd package -Dmaven.test.skip=true
+```
+
+**Linux / Mac:**
+```bash
+cd Backend/nic-validation
+./mvnw package -Dmaven.test.skip=true
+```
+
+> **Success Check:** Ensure a file named `nic-nicRecord-0.0.1-SNAPSHOT.jar` is created in the `target/` folder.
+
+#### 3. Start the Application
+Return to the project root directory and start the services.
+
+```bash
+# Go back to the root folder
+cd ../.. 
+
+# Start Docker Containers
+docker-compose up --build
+```
+
+#### 4. Access the Application
+Once the logs stop scrolling and you see "Started Main in ... seconds", the app is ready:
+
+- **Frontend:** [http://localhost:5173](http://localhost:5173)
+- **Backend API:** [http://localhost:8080/api/nic](http://localhost:8080/api/nic)
+- **MySQL Database:** Port `3307` (Host: `localhost`, User: `user`, Pass: `1234`)
+
+#### 5. Stop the Application
+To shut down the services and remove containers:
+```bash
+docker-compose down
+```
 
 ### 🔧 Manual Setup
 
