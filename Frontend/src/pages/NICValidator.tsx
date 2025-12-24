@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { type NICData } from "../utils/nicValidation";
 import { useNicStore } from "../store/nicStore";
 import { Card } from "../components/Card";
@@ -6,41 +6,47 @@ import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 import { Search, RotateCcw, CheckCircle, Loader2 } from "lucide-react";
 import { format } from "date-fns";
+import toast from "react-hot-toast";
 
-const NICValidator = () => {
+export const NICValidator = () => {
   const [input, setInput] = useState("");
   const [result, setResult] = useState<NICData | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const validateNic = useNicStore((state) => state.validateNic);
+
+  const { validateNic, loading, error, successMessage, clearMessages } =
+    useNicStore();
+
+  useEffect(() => {
+    if (error) {
+      toast.error("Enter a valid NIC number");
+      clearMessages();
+    }
+    if (successMessage) {
+      toast.success(successMessage);
+      clearMessages();
+    }
+  }, [error, successMessage, clearMessages]);
 
   const handleValidate = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setResult(null);
+    setResult(null); 
 
     if (!input.trim()) {
-      setError("Please enter a NIC number");
+      toast.error("Please enter a NIC number"); 
       return;
     }
 
-    setLoading(true);
     try {
-      const validationResult = await validateNic(input.trim());
-      setResult(validationResult);
+      const data = await validateNic(input.trim());
+      setResult(data);
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Validation failed";
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
+      console.log(err);
     }
   };
 
   const handleReset = () => {
     setInput("");
     setResult(null);
-    setError(null);
+    clearMessages();
   };
 
   return (
@@ -49,7 +55,7 @@ const NICValidator = () => {
         <div>
           <h2 className="text-3xl font-bold text-white mb-2">Check ID</h2>
           <p className="text-slate-400">
-            Validate Sri Lankan Identity Cards instanty
+            Validate Sri Lankan Identity Cards instantly
           </p>
         </div>
       </header>
