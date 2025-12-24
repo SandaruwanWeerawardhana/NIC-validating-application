@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import axios from "axios";
 import type { NICData } from "../utils/nicValidation";
 import { getAuthHeaders } from "./authStore";
 
@@ -46,24 +47,13 @@ export const useNicStore = create<NicStoreState>((set) => ({
   ) => {
     set({ loading: true, error: null, successMessage: null });
     try {
-      const response = await fetch(`${API_BASE_URL}/add`, {
-        method: "POST",
-        headers: getAuthHeaders(),
-        body: JSON.stringify({
-          nicNumber,
-          dob,
-          gender,
-        }),
-      });
+      const response = await axios.post(
+        `${API_BASE_URL}/add`,
+        { nicNumber, dob, gender },
+        { headers: getAuthHeaders() }
+      );
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(
-          errorData.message || `HTTP ${response.status}: Failed to added NIC`
-        );
-      }
-
-      const data = await response.json();
+      const data = response.data;
 
       if (data === null) {
         throw new Error("Received null response from server");
@@ -83,8 +73,12 @@ export const useNicStore = create<NicStoreState>((set) => ({
         successMessage: `NIC added successfully`,
       }));
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Failed to added NIC";
+      let errorMessage = "Failed to added NIC";
+      if (axios.isAxiosError(err)) {
+        errorMessage = err.response?.data?.message || err.message;
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
       set({ error: errorMessage, loading: false });
       throw err;
     }
@@ -93,22 +87,16 @@ export const useNicStore = create<NicStoreState>((set) => ({
   validateNic: async (inputNic: string) => {
     set({ loading: true, error: null, successMessage: null });
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/validate?nic=${encodeURIComponent(inputNic)}`,
+      const response = await axios.post(
+        `${API_BASE_URL}/validate`,
+        null,
         {
-          method: "POST",
+          params: { nic: inputNic },
           headers: getAuthHeaders(),
         }
       );
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(
-          errorData.message || `HTTP ${response.status}: Validation failed`
-        );
-      }
-
-      const data = await response.json();
+      const data = response.data;
 
       if (data === null) {
         throw new Error("Received null response from server");
@@ -131,8 +119,12 @@ export const useNicStore = create<NicStoreState>((set) => ({
 
       return validationResult;
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Validation failed";
+      let errorMessage = "Validation failed";
+      if (axios.isAxiosError(err)) {
+        errorMessage = err.response?.data?.message || err.message;
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
       set({ error: errorMessage, loading: false });
       throw err;
     }
@@ -141,16 +133,11 @@ export const useNicStore = create<NicStoreState>((set) => ({
   fetchRecords: async () => {
     set({ loading: true, error: null, successMessage: null });
     try {
-      const response = await fetch(`${API_BASE_URL}/get`, {
-        method: "GET",
+      const response = await axios.get(`${API_BASE_URL}/get`, {
         headers: getAuthHeaders(),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: Failed to fetch records`);
-      }
-
-      const data = await response.json();
+      const data = response.data;
       const rawRecords = Array.isArray(data) ? data : [data];
 
       const records: NICData[] = rawRecords
@@ -171,8 +158,12 @@ export const useNicStore = create<NicStoreState>((set) => ({
         successMessage: `${records.length} records loaded`,
       });
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Failed to fetch records";
+      let errorMessage = "Failed to fetch records";
+      if (axios.isAxiosError(err)) {
+        errorMessage = err.response?.data?.message || err.message;
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
       set({ error: errorMessage, loading: false });
     }
   },
@@ -180,16 +171,12 @@ export const useNicStore = create<NicStoreState>((set) => ({
   downloadPdfReport: async () => {
     set({ loading: true, error: null, successMessage: null });
     try {
-      const response = await fetch(`${API_BASE_URL}/report/pdf`, {
-        method: "GET",
+      const response = await axios.get(`${API_BASE_URL}/report/pdf`, {
         headers: getAuthHeaders(),
+        responseType: "blob",
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: Failed to download PDF`);
-      }
-
-      const blob = await response.blob();
+      const blob = new Blob([response.data], { type: "application/pdf" });
       const url = globalThis.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -201,7 +188,12 @@ export const useNicStore = create<NicStoreState>((set) => ({
 
       set({ loading: false, successMessage: "PDF downloaded" });
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to download PDF";
+      let errorMessage = "Failed to download PDF";
+      if (axios.isAxiosError(err)) {
+        errorMessage = err.response?.data?.message || err.message;
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
       set({ error: errorMessage, loading: false });
       throw err;
     }
@@ -210,16 +202,14 @@ export const useNicStore = create<NicStoreState>((set) => ({
   downloadExcelReport: async () => {
     set({ loading: true, error: null, successMessage: null });
     try {
-      const response = await fetch(`${API_BASE_URL}/report/excel`, {
-        method: "GET",
+      const response = await axios.get(`${API_BASE_URL}/report/excel`, {
         headers: getAuthHeaders(),
+        responseType: "blob",
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: Failed to download Excel`);
-      }
-
-      const blob = await response.blob();
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
       const url = globalThis.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -231,7 +221,12 @@ export const useNicStore = create<NicStoreState>((set) => ({
 
       set({ loading: false, successMessage: "Excel downloaded" });
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to download Excel";
+      let errorMessage = "Failed to download Excel";
+      if (axios.isAxiosError(err)) {
+        errorMessage = err.response?.data?.message || err.message;
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
       set({ error: errorMessage, loading: false });
       throw err;
     }
