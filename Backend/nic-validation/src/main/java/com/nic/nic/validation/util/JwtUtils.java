@@ -48,7 +48,7 @@ public class JwtUtils {
                     .build()
                     .parseSignedClaims(token);
             return true;
-        } catch (Exception _) {
+        } catch (Exception err) {
             return false;
         }
     }
@@ -61,7 +61,7 @@ public class JwtUtils {
                     .parseSignedClaims(token)
                     .getPayload();
             return claims.getSubject();
-        } catch (Exception _) {
+        } catch (Exception err) {
             return null;
         }
     }
