@@ -42,7 +42,7 @@ export const getAuthToken = (): string | null => {
   return getCookie(AUTH_COOKIE_NAME);
 };
 
-export const getAuthHeaders = (): HeadersInit => {
+export const getAuthHeaders = (): Record<string, string> => {
   const token = getAuthToken();
   return {
     "Content-Type": "application/json",
