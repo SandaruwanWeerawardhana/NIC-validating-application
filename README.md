@@ -1,22 +1,5 @@
 <h1 align=center>Validating Application</h1>
 
-A full-stack web application for validating and managing National Identity Card (NIC) records. This application allows users to register, authenticate, validate Sri Lankan NICs, manage validation records, and generate comprehensive reports in PDF and Excel formats.
-
----
-
-## 📋 Table of Contents
-
-- [Project Overview](#project-overview)
-- [System Features](#system-features)
-- [Tech Stack](#tech-stack)
-- [Project Architecture](#project-architecture)
-- [Project Folder Structure](#project-folder-structure)
-- [Setup Instructions](#setup-instructions)
-- [How to Run the Application](#how-to-run-the-application)
-- [API Endpoints](#api-endpoints)
-
----
-
 ## 🎯 Project Overview
 
 The NIC Validating Application is designed to validate Sri Lankan National Identity Cards (both old 9-digit + letter format and new 13-digit format). The system extracts vital information from NICs including:
@@ -310,8 +293,3 @@ The application uses the following environment variables (defined in `docker-com
 <img width="1913" height="897" alt="n3" src="https://github.com/user-attachments/assets/a780daf8-b18b-45cc-88c2-94d4ae55d2ef" />
 
 </div>
----
-
-## 📄 License
-
-This project is open source and available for educational purposes.
