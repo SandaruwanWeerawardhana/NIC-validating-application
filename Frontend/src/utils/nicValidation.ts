@@ -3,7 +3,7 @@ import { differenceInYears } from "date-fns";
 export interface NICData {
   isValid: boolean;
   type: "old" | "new" | null;
-  gender: "Male" | "Female" | null;
+  gender: "MALE" | "FEMALE" | null;
   birthDate: Date | null;
   age: number | null;
   error?: string;
@@ -52,9 +52,9 @@ export const validateNic = (nic: string): NICData => {
     };
   }
 
-  let gender: "Male" | "Female" = "Male";
+  let gender: "MALE" | "FEMALE" = "MALE";
   if (days > 500) {
-    gender = "Female";
+    gender = "FEMALE";
     days -= 500;
   }
 
