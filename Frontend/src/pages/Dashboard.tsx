@@ -42,8 +42,8 @@ const Dashboard = () => {
   };
 
   const total = records.length;
-  const male = records.filter((r) => r.gender === "Male").length;
-  const female = records.filter((r) => r.gender === "Female").length;
+  const male = records.filter((r) => r.gender === "MALE").length;
+  const female = records.filter((r) => r.gender === "FEMALE").length;
 
   const stats = [
     {

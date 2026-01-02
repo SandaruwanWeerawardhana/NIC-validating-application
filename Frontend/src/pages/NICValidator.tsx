@@ -142,7 +142,7 @@ export const NICValidator = () => {
                   <dd className="text-sm font-bold text-white flex items-center gap-2">
                     <span
                       className={`w-2 h-2 rounded-full ${
-                        result.gender === "Male" ? "bg-blue-400" : "bg-pink-400"
+                        result.gender === "MALE" ? "bg-blue-400" : "bg-pink-400"
                       }`}
                     ></span>
                     {result.gender}
