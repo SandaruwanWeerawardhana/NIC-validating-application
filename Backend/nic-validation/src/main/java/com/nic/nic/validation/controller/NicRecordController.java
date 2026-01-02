@@ -16,11 +16,6 @@ import java.util.List;
 public class NicRecordController {
 
     private final NicRecordService nicService;
-    @PostMapping("/add")
-    public ResponseEntity<String> create(@RequestBody NicRecord request) {
-        String response = nicService.add(request);
-        return ResponseEntity.ok(response);
-    }
 
     @PostMapping("/validate")
     public ResponseEntity<NicRecord> validateByNic(@RequestParam("nic") String nic) {
