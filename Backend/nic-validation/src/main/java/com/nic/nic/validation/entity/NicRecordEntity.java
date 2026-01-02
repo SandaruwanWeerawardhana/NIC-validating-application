@@ -29,6 +29,8 @@ public class NicRecordEntity {
     @Column(name = "gender", nullable = false, length = 10)
     private String gender;
 
+    private Integer age;
+
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime validatedAt;
