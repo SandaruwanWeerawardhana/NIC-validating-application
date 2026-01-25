@@ -14,7 +14,7 @@ interface NicStoreState {
   validateAndAddNic: (
     nicNumber: string,
     dob: string,
-    gender: "Male" | "Female"
+    gender: string | null
   ) => Promise<void>;
   validateNic: (nicNumber: string) => Promise<NICData>;
   downloadPdfReport: () => Promise<void>;
@@ -53,7 +53,7 @@ export const useNicStore = create<NicStoreState>((set) => ({
   validateAndAddNic: async (
     nicNumber: string,
     dob: string,
-    gender: "Male" | "Female"
+    gender: string | null
   ) => {
     set({ loading: true, error: null, successMessage: null });
     try {
