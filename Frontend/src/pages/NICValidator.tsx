@@ -168,6 +168,9 @@ export const NICValidator = () => {
           )}
         </div>
       </div>
+      <footer className="text-center text-slate-500 text-sm mt-12 mb-6">
+        &copy; {new Date().getFullYear()} Sandaruwan. All rights reserved.
+    </footer>
     </div>
   );
 };
