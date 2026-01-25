@@ -27,6 +27,16 @@ interface NicStoreState {
 
 const API_BASE_URL = "http://localhost:8080/api/nic";
 
+const mapGender = (g: any): "MALE" | "FEMALE" | null => {
+  if (!g) return null;
+  const s = String(g).toUpperCase();
+  if (s === "MALE") return "MALE";
+  if (s === "FEMALE") return "FEMALE";
+  // also accept first-letter capitalized inputs like "Male"/"Female"
+  if (s === "MALE" || s === "MALE") return "MALE";
+  if (s === "FEMALE" || s === "FEMALE") return "FEMALE";
+  return null;
+};
 export const useNicStore = create<NicStoreState>((set) => ({
   records: [],
   loading: false,
@@ -61,7 +71,7 @@ export const useNicStore = create<NicStoreState>((set) => ({
       const newRecord: NICData = {
         isValid: data.isValid || true,
         type: data.type || (nicNumber.length === 10 ? "old" : "new"),
-        gender,
+        gender: mapGender(gender),
         birthDate: new Date(dob),
         age: new Date().getFullYear() - new Date(dob).getFullYear(),
         originalNic: nicNumber.toUpperCase(),
@@ -105,7 +115,7 @@ export const useNicStore = create<NicStoreState>((set) => ({
       const validationResult: NICData = {
         isValid: true,
         type: data.nicNumber?.length === 10 ? "old" : "new",
-        gender: data.gender,
+        gender: mapGender(data.gender),
         birthDate: data.dob ? new Date(data.dob) : null,
         age: data.age,
         originalNic: data.nicNumber,
@@ -145,7 +155,7 @@ export const useNicStore = create<NicStoreState>((set) => ({
           isValid: true,
           type:
             item.nicNumber?.length === 10 ? ("old" as const) : ("new" as const),
-          gender: item.gender,
+          gender: mapGender(item.gender),
           birthDate: new Date(item.dob),
           age: item.age,
           originalNic: item.nicNumber,
