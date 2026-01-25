@@ -21,7 +21,7 @@ public class JwtUtils {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(base64Secret));
     }
     public String generateToken(String username) {
-        long expirationMs = 3_600_000L;
+        long expirationMs = 3_600_0000L;
         Instant now = Instant.now();
 
         return Jwts.builder()
