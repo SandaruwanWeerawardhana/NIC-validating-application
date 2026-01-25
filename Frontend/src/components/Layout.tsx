@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
-import { LayoutDashboard, CreditCard, LogOut, Menu, X, PlusCircle } from 'lucide-react';
+import { LayoutDashboard, CreditCard, LogOut, Menu, X } from 'lucide-react';
 import { Button } from './Button';
 
 export const Layout = () => {
