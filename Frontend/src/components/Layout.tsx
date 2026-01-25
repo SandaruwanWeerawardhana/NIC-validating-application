@@ -20,7 +20,7 @@ export const Layout = () => {
     const navItems = [
         { path: '/', label: 'Dashboard', icon: LayoutDashboard },
         { path: '/validate', label: 'Validate NIC', icon: CreditCard },
-        { path: '/add', label: 'Add NIC Data', icon: PlusCircle }, 
+        // { path: '/add', label: 'Add NIC Data', icon: PlusCircle }, 
     ];
 
     return (
